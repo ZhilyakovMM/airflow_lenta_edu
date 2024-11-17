@@ -2,11 +2,10 @@ import datetime
 import os
 import sys
 import pendulum
-import logging
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.exceptions import AirflowSkipException
+from datetime import datetime
 
 DAG_NAME = os.path.basename(__file__).replace('.pyc', '').replace('.py', '')
 # Add python path
@@ -29,12 +28,11 @@ dag = DAG(
     # Регламент каждые 3 часа
     schedule_interval="0 */3 * * *",
     start_date=pendulum.datetime(2023, 3, 21, tz="UTC"),
-    catchup=False,
-    tags=["IDC_STG_ODS", "APP_METR"]
+    catchup=False
 )
 
 def example(**kwargs):
-    print(f'Template. Kwargs: {kwargs}')
+    return {'key_example': datetime.now().strftime('YYYY-MM-DD HH:MI:SS')}
 
 
 example_op = PythonOperator(
