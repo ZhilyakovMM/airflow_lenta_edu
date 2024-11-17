@@ -31,7 +31,7 @@ dag = DAG(
 )
 
 def example(**kwargs):
-    return {'key_example': datetime.datetime.now().strftime('YYYY-MM-DD HH:MI:SS')}
+    return {'key_example': datetime.datetime.now()}
 
 
 example_op = PythonOperator(
