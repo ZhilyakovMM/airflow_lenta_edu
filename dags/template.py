@@ -5,7 +5,6 @@ import pendulum
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime
 
 DAG_NAME = os.path.basename(__file__).replace('.pyc', '').replace('.py', '')
 # Add python path
@@ -32,7 +31,7 @@ dag = DAG(
 )
 
 def example(**kwargs):
-    return {'key_example': datetime.now().strftime('YYYY-MM-DD HH:MI:SS')}
+    return {'key_example': datetime.datetime.now().strftime('YYYY-MM-DD HH:MI:SS')}
 
 
 example_op = PythonOperator(
