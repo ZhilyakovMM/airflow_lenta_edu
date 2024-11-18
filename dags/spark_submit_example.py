@@ -33,7 +33,7 @@ with DAG(
     catchup=False
 ):
     spark_submit_op = SparkSubmitOperator(
-        application="/opt/airflow/dags/src/spark_app.py",
+        application="/opt/airflow/dags/repo/src/spark_app.py",
         conn_id='spark_k8s',
         task_id='spark_submit_example',
         application_args=[
