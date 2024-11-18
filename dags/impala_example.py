@@ -39,10 +39,7 @@ def example(**kwargs):
     )
     conn = hook.get_conn()
     cur = conn.cursor()
-    cur.execute('SHOW DATABASES;')
-    result = cur.fetchall()
-    for data in result:
-        print(data)
+    cur.execute('CREATE TABLE IF NOT EXISTS lenta_training.sales__trainer AS SELECT * FROM lenta_training.sales LIMIT 100')
 
 
 
