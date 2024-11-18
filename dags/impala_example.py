@@ -33,10 +33,11 @@ dag = DAG(
 def example(**kwargs):
     from airflow.providers.apache.impala.hooks.impala import ImpalaHook
 
-    conn = ImpalaHook(
+    hook = ImpalaHook(
         conn_name_attr='impala_test',
         default_conn_name='impala_test'
-    ).get_conn()
+    )
+    conn = hook.get_conn()
     cur = conn.cursor()
     cur.execute('SHOW DATABASES;')
     result = cur.fetchall()
