@@ -16,7 +16,7 @@ dag_default_args = {
     'email': ['mikhail.zhilyakov@glowbyteconsulting.com'],
     'email_on_failure': True,
     'email_on_retry': False,
-    'retries': 5,
+    'retries': 0,
     'retry_delay': datetime.timedelta(minutes=5)
 }
 
