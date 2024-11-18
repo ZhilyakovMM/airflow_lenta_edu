@@ -1,10 +1,13 @@
 import sys
+from pyspark.sql import SparkSession
 
+table_name = sys.argv[1]
 
-def foo(name: str):
-    print(f'Hello {name}')
+spark = SparkSession.builder \
+                    .appName(f"select_{table_name}") \
+                    .enableHiveSupport() \
+                    .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")\
+                    .getOrCreate()
 
+df = spark.sql(f"SELECT * FROM {table_name}")
 
-if __name__ == '__main__':
-    name = sys.argv[1]
-    foo(name=name)
