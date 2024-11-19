@@ -15,7 +15,7 @@ sys.path.append(PYTHON_PATH)
 dag_default_args = {
     'owner': 'Zhilyakov Mikhail',
     'email': ['mikhail.zhilyakov@glowbyteconsulting.com'],
-    'email_on_failure': True,
+    'email_on_failure': False,
     'email_on_retry': False,
     'retries': 0,
     'retry_delay': datetime.timedelta(minutes=5)
