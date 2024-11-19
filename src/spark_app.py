@@ -1,13 +1,15 @@
 import sys
 from pyspark.sql import SparkSession
 
-table_name = sys.argv[1]
+schema_table_name = sys.argv[1]
+user = sys.argv[2]
 
 spark = SparkSession.builder \
-                    .appName(f"select_{table_name}") \
+                    .appName(f"CTAS_{schema_table_name}") \
                     .enableHiveSupport() \
                     .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")\
                     .getOrCreate()
 
-df = spark.sql(f"SELECT * FROM {table_name}")
+df = spark.sql(f"SELECT * FROM {schema_table_name} LIMIT 100;")
+df.write.format("iceberg").saveAsTable(f"spark__{schema_table_name}__user")
 

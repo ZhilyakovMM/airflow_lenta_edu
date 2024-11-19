@@ -37,7 +37,8 @@ with DAG(
         conn_id='spark_k8s',
         task_id='spark_submit_example',
         application_args=[
-            'lenta_training.sales;'
+            'lenta_training.sales',
+            'trainer'
         ],
         conf=spark_conf,
         name=f'{DAG_NAME}__spark_submit_example'
