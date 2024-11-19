@@ -12,5 +12,5 @@ spark = SparkSession.builder \
                     .getOrCreate()
 
 df = spark.sql(f"SELECT * FROM {schema_name}.{table_name} LIMIT 100;")
-df.write.format("iceberg").saveAsTable(f"{schema_name}.{table_name}__{user}")
+df.write.format("parquet").saveAsTable(f"{schema_name}.{table_name}__{user}")
 
