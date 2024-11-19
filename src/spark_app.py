@@ -12,7 +12,7 @@ spark = SparkSession.builder \
                     .getOrCreate()
 
 df = spark.sql(f"SELECT * FROM {schema_name}.{table_name} LIMIT 100;")
-# df.writeTo(f"{schema_name}.spark__{table_name}__{user}") \
+df.writeTo(f"{schema_name}.spark__{table_name}__{user}")
 #     .tableProperty("write.parquet.compression-codec", "snappy") \
 #     .tableProperty("write.format.default", "orc") \
 #     .partitionedBy("name") \
