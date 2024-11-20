@@ -4,7 +4,8 @@ import sys
 import pendulum
 
 from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
+from airflow.models import Variable
 
 DAG_NAME = os.path.basename(__file__).replace('.pyc', '').replace('.py', '')
 # Add python path
@@ -20,17 +21,7 @@ dag_default_args = {
     'retry_delay': datetime.timedelta(minutes=5)
 }
 
-def example(dag_name: str, **kwargs):
-    from airflow.providers.apache.impala.hooks.impala import ImpalaHook
-
-    hook = ImpalaHook(
-        conn_name_attr='impala_test',
-        default_conn_name='impala_test'
-    )
-    conn = hook.get_conn()
-    cur = conn.cursor()
-    cur.execute(f'CREATE TABLE IF NOT EXISTS lenta_training.sales__{dag_name} AS SELECT * FROM lenta_training.sales LIMIT 100')
-
+spark_conf = Variable.get(key=DAG_NAME, deserialize_json = True)
 
 with DAG(
     dag_id=DAG_NAME,
@@ -41,9 +32,15 @@ with DAG(
     start_date=pendulum.datetime(2023, 3, 21, tz="UTC"),
     catchup=False
 ):
-    example_op = PythonOperator(
-        task_id='example',
-        python_callable=example,
-        op_kwargs={'dag_name': DAG_NAME},
-        provide_context=True
+    spark_submit_op = SparkSubmitOperator(
+        application="/opt/airflow/dags/repo/src/spark_app.py",
+        conn_id='spark_k8s',
+        task_id='spark_submit_example',
+        application_args=[
+            'lenta_training',
+            'sales',
+            DAG_NAME
+        ],
+        conf=spark_conf,
+        name=f'{DAG_NAME}__spark_submit_example'
     )
