@@ -20,7 +20,19 @@ dag_default_args = {
     'retry_delay': datetime.timedelta(minutes=5)
 }
 
-dag = DAG(
+def example(dag_name: str, **kwargs):
+    from airflow.providers.apache.impala.hooks.impala import ImpalaHook
+
+    hook = ImpalaHook(
+        conn_name_attr='impala_test',
+        default_conn_name='impala_test'
+    )
+    conn = hook.get_conn()
+    cur = conn.cursor()
+    cur.execute(f'CREATE TABLE IF NOT EXISTS lenta_training.sales__{dag_name} AS SELECT * FROM lenta_training.sales LIMIT 100')
+
+
+with DAG(
     dag_id=DAG_NAME,
     default_args=dag_default_args,
     max_active_runs=1,
@@ -28,16 +40,10 @@ dag = DAG(
     schedule_interval="0 */3 * * *",
     start_date=pendulum.datetime(2023, 3, 21, tz="UTC"),
     catchup=False
-)
-
-def example(example_kwarg, **kwargs):
-    print(example_kwarg)
-
-
-example_op = PythonOperator(
-    dag=dag,
-    task_id='example',
-    python_callable=example,
-    op_kwargs={'example_kwarg': 'example'},
-    provide_context=True
-)
+):
+    example_op = PythonOperator(
+        task_id='example',
+        python_callable=example,
+        op_kwargs={'dag_name': DAG_NAME},
+        provide_context=True
+    )
